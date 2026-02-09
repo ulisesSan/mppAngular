@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <span>DEBUG: {{ tareasDelProyecto().length }}</span>
+  <div class="card shadow-sm p-4">
+    <h3 class="mb-3">Analizador de Proyectos MPP</h3>
+    
+    <div class="input-group mb-3">
+      <input type="file" class="form-control" (change)="onFileChange($event)" accept=".mpp">
+      <button class="btn btn-primary" [disabled]="!archivoSeleccionado" (click)="subirArchivo()">
+        <i class="bi bi-upload"></i> Procesar en Java
+      </button>
+    </div>
+
+    <hr>
+
+    @if (tareasDelProyecto().length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover table-striped border">
+          <thead class="table-dark">
+            <tr>
+              <th>Nombre de la Tarea</th>
+              <th>Inicio</th>
+              <th>Duración</th>
+              <th>Progreso</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tarea of tareasDelProyecto(); track tarea.id) {
+              <tr>
+                <td [style.padding-left.px]="tarea.hierarchyLevel * 20"[class.fw-bold]="tarea.hasSubtasks">{{ tarea.taskName }}</td>
+                <td>{{ tarea.startDate | date:'mediumDate' }}</td>
+                <td>{{ tarea.duration }}</td>
+                <td>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar" [style.width.%]="tarea.percentageComplete"></div>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="alert alert-light border text-center text-muted">
+        <p>No hay tareas para mostrar. Selecciona un archivo de MS Project.</p>
+      </div>
+    }
+  </div>
+</div>
