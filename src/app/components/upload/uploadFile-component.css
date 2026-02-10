@@ -1,0 +1,42 @@
+.help-icon-container {
+  position: relative;
+  cursor: help;
+  display: inline-block;
+}
+
+.ai-tooltip {
+  position: absolute;
+  top: 120%; /* Aparece debajo del icono */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 1000;
+  
+  /* Efecto de desaparición/aparición */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* El triangulito superior del cuadro */
+.ai-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+/* Mostrar al pasar el cursor */
+.help-icon-container:hover .ai-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(5px);
+}

@@ -2,20 +2,27 @@ import { Component, signal } from "@angular/core";
 import { FileService } from "../../services/file-service";
 import { CommonModule } from "@angular/common";
 
-interface Tarea {
+interface Mpp {
   id: number;
   taskName: string;
   startDate: string;
   duration: string;
-  hasSubtasks: boolean;
-  percentageComplete: number;
+  percentageComplete:number;
+  predecessor:string;
+  predecessors:string;
   hierarchyLevel: number;
+}
+
+interface Project{
+  mpp: Mpp[];
+  persentageComplete: number;
 }
 
 @Component({
         selector:'app-upload',
         imports:[CommonModule],
         templateUrl:'./uploadFile-component.html',
+        styleUrl: './uploadFile-component.css'
 })
 
 export class UploadComponent{
@@ -23,7 +30,7 @@ export class UploadComponent{
   archivoSeleccionado: File | null = null;
   
   // Definimos las tareas como una Signal
-  tareasDelProyecto = signal<Tarea[]>([]);
+  tareasDelProyecto = signal<Project | null>(null);
 
   constructor(private fileService: FileService) {}
 
@@ -35,7 +42,7 @@ export class UploadComponent{
     if (!this.archivoSeleccionado) return;
 
     this.fileService.uploadFile(this.archivoSeleccionado).subscribe({
-      next: (data) => {
+      next: (data:any) => {
         console.log("Datos recibidos:", data);
         // Actualizamos la señal con los datos de Java
         this.tareasDelProyecto.set(data);

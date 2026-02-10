@@ -1,18 +1,38 @@
 <div class="container mt-4">
-  <span>DEBUG: {{ tareasDelProyecto().length }}</span>
+  <div class="d-flex align-items-center gap-2">
+  <h3 class="mb-0">Analizador de Proyectos MPP</h3>
+  
+  <div class="help-icon-container">
+    <i class="bi bi-question-circle-fill text-primary"></i>
+    
+    <div class="ai-tooltip shadow">
+      <p class="mb-2"><strong>Asistente IA Gemma</strong></p>
+      <p class="small text-muted">Pregúntame sobre los cuellos de botella, retrasos o asignación de recursos de este plan.</p>
+      <button class="btn btn-sm btn-outline-primary w-100">Consultar a la IA</button>
+    </div>
+  </div>
+</div>
+  <span>DEBUG: {{ tareasDelProyecto()?.mpp?.length || 0 }}</span>
+  
   <div class="card shadow-sm p-4">
     <h3 class="mb-3">Analizador de Proyectos MPP</h3>
     
+    @if (tareasDelProyecto()) {
+      <div class="alert alert-info">
+        <strong>Avance Total del Proyecto: </strong> {{ tareasDelProyecto()?.persentageComplete }}%
+      </div>
+    }
+
     <div class="input-group mb-3">
       <input type="file" class="form-control" (change)="onFileChange($event)" accept=".mpp">
       <button class="btn btn-primary" [disabled]="!archivoSeleccionado" (click)="subirArchivo()">
-        <i class="bi bi-upload"></i> Procesar en Java
+        Procesar en Java
       </button>
     </div>
 
     <hr>
 
-    @if (tareasDelProyecto().length > 0) {
+    @if (tareasDelProyecto()?.mpp && tareasDelProyecto()!.mpp.length > 0) {
       <div class="table-responsive">
         <table class="table table-hover table-striped border">
           <thead class="table-dark">
@@ -24,15 +44,17 @@
             </tr>
           </thead>
           <tbody>
-            @for (tarea of tareasDelProyecto(); track tarea.id) {
+            @for (tarea of tareasDelProyecto()?.mpp; track tarea.taskName) {
               <tr>
-                <td [style.padding-left.px]="tarea.hierarchyLevel * 20"[class.fw-bold]="tarea.hasSubtasks">{{ tarea.taskName }}</td>
-                <td>{{ tarea.startDate | date:'mediumDate' }}</td>
-                <td>{{ tarea.duration }}</td>
+                <td [style.padding-left.px]="tarea.hierarchyLevel * 20">
+                  {{ tarea.taskName }}
+                </td>
+                <td>{{ tarea.startDate }}</td> <td>{{ tarea.duration }}</td>
                 <td>
                   <div class="progress" style="height: 8px;">
                     <div class="progress-bar" [style.width.%]="tarea.percentageComplete"></div>
                   </div>
+                  <small>{{ tarea.percentageComplete }}%</small>
                 </td>
               </tr>
             }
@@ -45,4 +67,7 @@
       </div>
     }
   </div>
+
+
+
 </div>
